@@ -1,48 +1,20 @@
-This project is a Demo project for [graphql-clj](https://github.com/tendant/graphql-clj) and [GraphiQL](https://github.com/graphql/graphiql). You can start trying Clojure with GraphQL in a few minutes.
+# GraphQL Postgres backend
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+Тестовый пример был взят отсюда [graphql-clj-starter](https://github.com/tendant/graphql-clj-starter)
 
-### Start server
+Часть, касающаяся фронтенда, была оставлена из оригинального примера, но бэкенд весь переработан на основе подключения к базе Postgresql.
 
-    lein ring server-headless
+Добавлены 3 пространства имен:
 
-### Access graphiql from
+[graphql_parser.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_clj_starter/graphql_parser.clj)
 
-    http://localhost:3002/index.html
+[schema.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_clj_starter/schema.clj)
 
-#### Sample queries
+[test_postgres.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_clj_starter/test_postgres.clj)
 
-```
-query {
-  human (id:"1002") {
-    id
-    name
-    friends {
-      id
-      name
-      friends {
-        id
-      }
-    }
-  }
-}
-```
+а также грамматика для Antlr (взят готовый существующий вариант и переработан)
 
-#### Sample mutations
+[GraphQL.g4](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/public/GraphQL.g4)
 
-```
-mutation{
-  createHuman (name:"testname", friends:[]) {
-    id
-  }
-}
-```
 
-### Build Application (HTML & JS)
-
-_Note: Not required, unless you want to make changes to Javascript code_
-
-    npm install
-
-    npm run build
-
+В текущей версии закомментированы блоки экспериментов с реализацией функционала фрагментов GraphQL, чтобы пример был работоспособен на уровне того функционала, который реализован. При наличии базы Postgresql с нужным форматом таблиц, можно проверить работу примера в браузере.
