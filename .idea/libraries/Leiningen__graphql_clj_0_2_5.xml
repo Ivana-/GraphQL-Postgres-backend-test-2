@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Leiningen: graphql-clj:0.2.5">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/graphql-clj/graphql-clj/0.2.5/graphql-clj-0.2.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

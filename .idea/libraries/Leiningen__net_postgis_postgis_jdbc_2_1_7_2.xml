@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Leiningen: net.postgis/postgis-jdbc:2.1.7.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/postgis/postgis-jdbc/2.1.7.2/postgis-jdbc-2.1.7.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
