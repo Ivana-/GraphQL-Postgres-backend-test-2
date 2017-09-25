@@ -17,9 +17,15 @@
 
                  [org.clojure/java.jdbc "0.7.1"]
                  [honeysql "0.9.1"]
-                 [clj-postgresql "0.7.0"]
+;                 [clj-postgresql "0.7.0"]
                  [clj-antlr "0.2.4"]
                  ]
+
+ ; :exclusions [
+ ; для убирания страшных логов clj-postgresql
+ ;              [ch.qos.logback/logback-classic]
+ ;              [ch.qos.logback/logback-core]
+ ;              ]
 
   :main ^:skip-aot graphql-clj-starter.core
   :target-path "target/%s"
@@ -33,4 +39,5 @@
   :plugins [[lein-ring "0.9.7"]]
   :ring {:handler graphql-clj-starter.handler/app
          :auto-reload? true
-         :port 3002})
+         :port 3002
+         })

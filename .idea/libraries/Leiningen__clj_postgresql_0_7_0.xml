@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Leiningen: clj-postgresql:0.7.0">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/clj-postgresql/clj-postgresql/0.7.0/clj-postgresql-0.7.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

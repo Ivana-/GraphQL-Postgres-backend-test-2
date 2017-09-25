@@ -51,12 +51,12 @@
             )))
 
 (def q (m-t :query {}
-                  ;q-users
+                  q-users
                   q-posts
                   ;q-user
                   ;q-post
                   ))
-(identity q)
+;(identity q)
 
 
 "
@@ -79,7 +79,7 @@
   (let [type (:type type-field)]
     (if (string? type) @(resolve (symbol type)) type)))
 
-(defn sql-query [node type-field parent-type-field d]
+(defn sql-query--- [node type-field parent-type-field d]
   (let [type-zzz (get-type type-field)
         sql-table (:sqlTable type-zzz)
         sql-table-alias (:sqlTableAlias type-zzz)
@@ -110,7 +110,7 @@
              (map #(str
                      (str "    " d)
                      "'" (name (fieldName-or-alias %)) "', "
-                     (sql-query %
+                     (sql-query--- %
                                 ((:fieldName %) children-fields)
                                 type-field
                                 (str "    " d)))
@@ -130,6 +130,84 @@
              "" (str "where " (sql-where args-fact)))
            ")"
            ))))
+
+(defn get-errors [node type-field parent-type-field]
+  (if (nil? type-field)
+    (list (str "field "
+              (name (:fieldName node))
+               " does not exist on "
+               (:name (get-type parent-type-field)))
+          )
+    nil))
+
+; будем возвращать пару в мапе - текст запроса и список ошибок при его построении
+
+(defn sql-query [node type-field parent-type-field d]
+
+  (let [type-zzz (get-type type-field)
+        sql-table (:sqlTable type-zzz)
+        sql-table-alias (:sqlTableAlias type-zzz)
+        sql-parent-table-alias (:sqlTableAlias (get-type parent-type-field))
+        sql-where (:sqlWhere type-field)
+        is-list (:is-list type-field)
+        children-fields (:fields type-zzz)
+        args-fact (:args node)
+
+        errors (get-errors node type-field parent-type-field)
+        ]
+
+    (cond
+      ; это ошибка
+      (not (nil? errors))
+      {:sql-text "", :errors errors}
+
+      ; это лист
+      (nil? (:nodes node))
+      {:sql-text (str sql-parent-table-alias
+                      "." (:sqlColumn type-field)) :errors nil}
+
+      ; это объект
+      :else
+      (let [sub-querys (map #(sql-query
+                         %
+                         ((:fieldName %) children-fields)
+                         type-field
+                         (str "    " d)) (:nodes node))
+
+            names-fields (map #(str
+                          (str "    " d)
+                          "'" (name (fieldName-or-alias %2)) "', "
+                          (:sql-text %1)) sub-querys (:nodes node))
+
+            errors (apply concat (map :errors sub-querys))
+
+            sql-text
+            (str "(select "
+                 (if is-list "json_agg(" "(")
+                 "json_build_object(" new-line-sym
+
+                 ; select section
+                 (clojure.string/join (str "," new-line-sym) names-fields)
+
+                 new-line-sym d ")) "
+
+                 ; from section
+                 (if (nil? sql-table)
+                   "as data" (str "from " sql-table
+                                  " as " sql-table-alias))
+
+                 new-line-sym d
+
+                 ; where section
+                 (if (nil? sql-where)
+                   "" (str "where " (sql-where args-fact)))
+                 ")"
+                 )
+            ]
+
+        {:sql-text sql-text, :errors errors})
+        )))
+
 
 
 (def GraphQLInt {:name "Int"})

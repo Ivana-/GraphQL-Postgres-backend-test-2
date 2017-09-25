@@ -1,5 +1,7 @@
 (ns graphql-clj-starter.test-postgres
-  (:require [clj-postgresql.core :as pg]
+  (:require
+
+    ;[clj-postgresql.core :as pg]
             [clojure.java.jdbc :as jdbc]
             [honeysql.core :as sql]
             [honeysql.helpers :refer :all :as helpers]
@@ -8,7 +10,38 @@
             [graphql-clj-starter.graphql-parser :as graphql-parser]
 
             [cheshire.core :as json]
-            ))
+            )
+
+ ; (:import ;[org.postgresql.util PGobject]
+           ;[org.postgis Geometry PGgeometry PGgeometryLW]
+           ;[java.sql PreparedStatement ParameterMetaData]
+  ;         )
+  )
+
+(defmulti read-pgobject
+          "Convert returned PGobject to Clojure value."
+          #(keyword (when % (.getType ^org.postgresql.util.PGobject %))))
+
+
+(defmethod read-pgobject :json
+  [^org.postgresql.util.PGobject x]
+  (when-let [val (.getValue x)]
+    (json/parse-string val)))
+
+
+(extend-protocol jdbc/IResultSetReadColumn
+
+  ;; Covert java.sql.Array to Clojure vector
+  java.sql.Array
+  (result-set-read-column [val _ _]
+    (into [] (.getArray val)))
+
+  ;; PGobjects have their own multimethod
+  org.postgresql.util.PGobject
+  (result-set-read-column [val _ _]
+    (read-pgobject val)))
+
+
 
 
 ;------------------------- параметры подключения к базе данных postgres
@@ -20,7 +53,6 @@
    :dbname "contactdb"
    :user "postgres"
    :password "postgress"})
-
 
 
 (def sql-query-1 "
@@ -207,21 +239,42 @@ from jc_contact as jc
 ")
 
 
+(def gql-query-1 "
+{
+  user(id: 1) {
+    namez
+    posts {
+      title
+    }
+  }
+}
+")
+;(println (graphql-parser/gql-text-to-sql gql-query-1))
 
 
 (defn execute [query variables operation-name]
-  (let [sql-query
-        (graphql-parser/gql-text-to-sql query)
+;  (let [sql-query (graphql-parser/gql-text-to-sql query)
         ;sql-query-4
         ;schema/test-query ;sql-query-1
-        query-rezult (jdbc/query db-spec sql-query)
-        fst (first query-rezult)]
+;        query-rezult (jdbc/query db-spec sql-query)
+;        fst (first query-rezult)]
     ;(doseq [r query-rezult]
     ;  (println ">" r))
     ;(println (class fst))
     ;(println fst)
-    fst)
+;    fst)
+
+  (let [sql-query-erros (graphql-parser/gql-text-to-sql query)
+        sql-query (:sql-text sql-query-erros)
+        errors (:errors sql-query-erros)]
+
+    (if (empty? errors)
+      (let [query-rezult (jdbc/query db-spec sql-query)]
+          (first query-rezult))
+      (json/generate-string {:errors errors}) ))
   )
+
+;(println (json/generate-string "123"))
 
 
 (defn -main [& args]
