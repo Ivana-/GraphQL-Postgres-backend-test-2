@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/graphql-clj-starter.iml" filepath="$PROJECT_DIR$/.idea/graphql-clj-starter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/graphql-postgres-clj.iml" filepath="$PROJECT_DIR$/.idea/graphql-postgres-clj.iml" />
     </modules>
   </component>
 </project>

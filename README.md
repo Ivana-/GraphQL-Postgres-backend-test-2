@@ -1,19 +1,138 @@
 # GraphQL Postgres backend
 
-Тестовый пример был взят отсюда [graphql-clj-starter](https://github.com/tendant/graphql-clj-starter)
+В качестве шаблона проекта был взят этот демо-пример: [graphql-clj-starter](https://github.com/tendant/graphql-clj-starter)
 
-Часть, касающаяся фронтенда, была оставлена из оригинального примера, но бэкенд весь переработан на основе подключения к базе Postgresql.
+Часть, касающаяся фронтенда, была оставлена из оригинального примера, но весь бэкенд переработан для работы с базой Postgresql. Проект содержит демопример работы с тестовой базой из вэб-интерфейса GraphiQL.
 
-Добавлены 3 пространства имен:
+#### Установка и использование:
 
-[graphql_parser.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_clj_starter/graphql_parser.clj)
+- создать базу Postgresql из [бекапа](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/db_backup/)
 
-[schema.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_clj_starter/schema.clj)
+- задать ваши параметры подключения к базе в файле [db-spec.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_postgres_clj/db-spec.clj)
 
-[test_postgres.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_clj_starter/test_postgres.clj)
+- запустить сервер `lein ring server-headless`
 
-а также грамматика для Antlr (взят готовый существующий вариант и переработан)
+- доступ к интерфейсу в браузере `http://localhost:3002/index.html`
 
-[GraphQL.g4](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/public/GraphQL.g4)
+#### Примеры запросов:
 
-В текущей версии закомментированы блоки экспериментов с реализацией функционала фрагментов GraphQL, чтобы пример был работоспособен на уровне того функционала, который реализован. При наличии базы Postgresql с нужным форматом таблиц, можно проверить работу примера в браузере.
+объекты с полями-примитивами
+
+```
+{
+  users {
+    id
+    name
+  }
+}
+```
+
+независимые подзапросы
+
+```
+{
+  users {
+    id
+    name
+  }
+  posts {
+    title
+  }
+}
+```
+
+вложенные объекты
+
+```
+{
+  users {
+    id
+    name
+    posts {
+      id
+      title
+    }
+  }
+}
+```
+
+передача аргументов
+
+```
+{
+  user(id: 2) {
+    id
+    name
+    comments {
+      text
+      author {
+        id
+        name
+      }
+    }
+  }
+}
+```
+
+циклические ссылки
+
+```
+{
+  user(id: 1) {
+    name
+    comments {
+      text
+      author {
+        name
+        comments {
+          text
+          author {
+            name
+            comments {
+              text
+              author {
+                name
+                comments {
+                  text
+                  author {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+и любые комбинации приведенных вариантов.
+
+В правом верхнем углу страницы есть меню `Docs` с навигацией по схеме, типам и полям, какие можно запрашивать. При отсутствии запрашиваемого поля в схеме возвращается ответ в виде списка ошибок - попробуйте выполнить запрос
+
+```
+{
+  users {
+    id
+    first_name
+  }
+}
+```
+
+#### TODO
+
+- параметрические запросы
+
+- фрагменты, инлайн-фрагменты
+
+- директивы
+
+- типы-суммы и интерфейсы
+
+- проверка соответствия аргументов ожидаемым типам и заполнение обязательных аргументов
+
+- валидация результата запроса на нарушение non-nullable полей
+
+- и т.д.

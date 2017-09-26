@@ -1,5 +1,5 @@
 {
-  "name": "graphql-clj-starter",
+  "name": "graphql-postgres-clj",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {

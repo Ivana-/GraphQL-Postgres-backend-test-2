@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module cursive.leiningen.project.LeiningenProjectsManager.displayName="graphql-clj-starter:0.1.0-SNAPSHOT" cursive.leiningen.project.LeiningenProjectsManager.isLeinModule="true" type="JAVA_MODULE" version="4">
+<module cursive.leiningen.project.LeiningenProjectsManager.displayName="graphql-postgres-clj:0.1.0-SNAPSHOT" cursive.leiningen.project.LeiningenProjectsManager.isLeinModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/target/base+system+user+dev/classes" />
     <output-test url="file://$MODULE_DIR$/target/base+system+user+dev/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dev-resources" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/jar/postgresql-42.1.4.jar" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/jar/postgresql-42.1.4.jar" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
@@ -41,7 +41,6 @@
     <orderEntry type="library" name="Leiningen: crypto-random:1.2.0" level="project" />
     <orderEntry type="library" name="Leiningen: graphql-clj:0.2.5" level="project" />
     <orderEntry type="library" name="Leiningen: hiccup:1.0.5" level="project" />
-    <orderEntry type="library" name="Leiningen: honeysql:0.9.1" level="project" />
     <orderEntry type="library" name="Leiningen: instaparse:1.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: javax.servlet/javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: javax.servlet/servlet-api:2.5" level="project" />
