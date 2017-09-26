@@ -8,7 +8,7 @@
 
 - создать базу Postgresql из [бекапа](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/db_backup/)
 
-- задать ваши параметры подключения к базе в файле [db-spec.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_postgres_clj/db-spec.clj)
+- задать ваши параметры подключения к базе в файле [db_spec.clj](https://github.com/Ivana-/GraphQL-Postgres-backend-test-2/blob/master/src/graphql_postgres_clj/db_spec.clj)
 
 - запустить сервер `lein ring server-headless`
 
