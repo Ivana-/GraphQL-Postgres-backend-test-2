@@ -27,6 +27,15 @@
 
     :field merge
 
+    :typeName (fn [x] {:typeName x})
+
+    ;(:inlineFragment
+    ;  "..."
+    ;  "on"
+    ;  (:typeCondition (:typeName "Droid"))
+    ;  (:selectionSet "{" (:selection (:field (:fieldName "primaryFunction"))) "}"))
+    :inlineFragment (fn [_ _ x y] {:onType (:typeName x), :nodes (:nodes y)})
+
     :directives (fn [& args] {:directives (filter map? args)})
     :selectionSet (fn [& args] {:nodes (filter map? args)})
 
@@ -38,7 +47,7 @@
     :arguments (fn [& args] {:args (apply merge (filter map? args))})
     ;(:argument "unit" ":" (:valueOrVariable (:value "FOOT")))
     ;(:argument "episode" ":" (:valueOrVariable (:variable "$" "ep")))
-    :argument (fn [x y z] {(keyword x) z})
+    :argument (fn [x _ y] {(keyword x) y})
     :value (fn [x] x)
     :variable (fn [x y] y)
 

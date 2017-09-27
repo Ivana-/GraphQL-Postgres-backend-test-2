@@ -11,7 +11,6 @@
                  [ring/ring-json "0.4.0"]
                  [ring-cors "0.1.8"]
 
-                 [graphql-clj "0.2.5"]
                  [org.clojure/java.jdbc "0.7.1"]
                  [clj-antlr "0.2.4"]
                  ]

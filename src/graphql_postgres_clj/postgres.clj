@@ -4,11 +4,6 @@
             [graphql-postgres-clj.schema :as schema]
             [graphql-postgres-clj.graphql-parser :as graphql-parser]
             [cheshire.core :as json]
-
-            ; из graphql-clj - исключительно для отсылки graphql-схемы
-            ; клиенту по запросу IntrospectionQuery при загрузке страницы
-            [graphql-clj.executor :as graphql-clj-executor]
-            [graphql-clj.schema-validator :as graphql-clj-schema-validator]
             ))
 
 ; модуль экспортирует функцию execute [query variables operation-name]
@@ -53,25 +48,18 @@
 ; если есть ошибки - не лезем в базу а возвращаем их в json-е клиенту
 (defn execute-core [query variables operation-name]
   (let [ast (graphql-parser/graphql-text-to-ast query)
-        sql-query-erros (schema/ast-to-sql-text-and-errors ast)
-        sql-query (:sql-text sql-query-erros)
-        errors (:errors sql-query-erros)]
-
-   (if (empty? errors)
-      (let [query-rezult (jdbc/query db-spec/db-spec sql-query)]
+        sql-query (schema/ast-to-sql-text-and-errors ast)
+        sql-query-text (:sql-text sql-query)
+        sql-query-erros (:errors sql-query)]
+    (if (empty? sql-query-erros)
+      (let [query-rezult (jdbc/query db-spec/db-spec sql-query-text)]
         (first query-rezult))
-      (json/generate-string {:errors errors}) )))
+      (json/generate-string {:errors sql-query-erros}) )))
 
-; преобразование построенной нами базовой схемы graphql в полную
-; (дополнение служебными полями и т.п.)
-(def validated-schema
-  (graphql-clj-schema-validator/validate-schema schema/starter-schema))
-
-; обертка нашей функции ответов на запросы - ради отправки полной
-; валидированной схемы клиенту по IntrospectionQuery при загрузке страницы
+; обертка нашей функции ответов на запросы - ради отправки текста GrqphQL-схемы
+; клиенту по IntrospectionQuery при загрузке/обновлении страницы
 ; во всех остальных случаях запросов работает наша функция execute-core
 (defn execute [query variables operation-name]
   (if (.contains query "IntrospectionQuery")
-    (graphql-clj-executor/execute
-      nil validated-schema nil query variables operation-name)
+    (json/generate-string schema/starter-schema)
     (execute-core query variables operation-name) ))
